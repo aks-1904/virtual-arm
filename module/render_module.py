@@ -66,18 +66,25 @@ def draw_text_overlay(width, height, text_lines):
     glDisable(GL_DEPTH_TEST)
     glDisable(GL_LIGHTING)
 
+    # *** ADDED for transparency ***
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
     # Render text using pygame font
     font = pygame.font.SysFont('Arial', 18)
     y_offset = height - 30
 
     for text in text_lines:
-        text_surface = font.render(text, True, (255, 255, 255))
+        text_surface = font.render(text, True, (255, 255, 255)) # White text
         text_data = pygame.image.tostring(text_surface, "RGBA", True)
         glRasterPos2f(10, y_offset)
         glDrawPixels(text_surface.get_width(), text_surface.get_height(),
                     GL_RGBA, GL_UNSIGNED_BYTE, text_data)
         y_offset -= 25
     
+    # *** ADDED to disable blend after use ***
+    glDisable(GL_BLEND)
+
     # Re-enable depth test and lighting
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_LIGHTING)
